@@ -20,8 +20,8 @@ st.title("Base Facial Features")
 st.sidebar.markdown(
     """
     ## Instructions
-    1. Type in the text box to generate a base face.
-    2. Click the button to generate a base face.
+    1. Type in the text box to generate a base sketch.
+    2. Click the button to generate a base sketch.
     3. Move to the next page by clicking the sidebar.
     """
 )
@@ -85,9 +85,9 @@ def app():
             """
         
         with col_2:
-            st.text("The prompt is:")
-            st.write(dalle_prompt)
             st.image(generate_image(dalle_prompt))
+            st.text("The description is:")
+            st.write(dalle_prompt)
 
 if __name__ == "__main__":
     app()

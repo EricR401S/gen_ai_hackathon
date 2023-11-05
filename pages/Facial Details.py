@@ -17,15 +17,15 @@ st.set_page_config(
     layout="wide"
     )
 st.sidebar.header("Facial Details")
-st.sidebar.write("Fill out the following form to generate a police sketch of a suspect.")
+st.sidebar.write("Fill out the following form to update the previous sketch.")
 st.title("Detail Facial Features")
 
 st.sidebar.markdown(
     """
     ## Instructions
-    1. Type in the text box to update more details of the face.
-    2. Click the button to update the face.
-    3. Move to the next page by clicking the sidebar.
+    1. Type in the text box to update more details of the sketch.
+    2. Click the button to update the sketch.
+    3. If you feel the image resembles even better now, move to the next page by clicking Final Details in the sidebar.
     """
 )
     
@@ -69,31 +69,33 @@ def app():
             prompt_hair = st.text_input('Hair', placeholder='color, length, .etc')
             prompt_facial_hair = st.text_input('Facial Hair', placeholder='beard, mustache, .etc')
             prompt_complexion = st.text_input('Complexion', placeholder='skin tone, .etc')
+            image = Image.open('img/img.png')
+            # st.image(image, caption="Image from previous iteration", use_column_width=True)
+            # show the image with smaller width
+            st.image(image, caption="Image from previous iteration", width=150)
         with col_y:
             prompt_demeanor = st.text_input('Demeanor', placeholder='intimidating, friendly, .etc')
             prompt_expression = st.text_input('Expression', placeholder='smiling, frowning, .etc')
             prompt_distinguishing_features = st.text_input('Distinguishing Features', placeholder='tattoos, scars, .etc')
+            if st.button("Update Sketch"):
+                dalle_prompt = f"""
+                        Update the hair style to be {prompt_hair} and with {prompt_facial_hair} visible.
+                        With a {prompt_complexion} complexion, and {prompt_demeanor} demeanor.
+                        The expression they showed is {prompt_expression}, and they have {prompt_distinguishing_features}.
+                    """
+                
+                with col_2:
+                    st.text("")
+                    st.text("The description is:")
+                    st.write(dalle_prompt)
+                    # eric call the mask function here, and make sure that you save the mask.png file in the img folder as mask.png
+                    masker("img/img.png", "img/mask.png")
+                    change_mask_format("mask.png")
+                    st.image(update_image("img/img.png", "mask.png", dalle_prompt))
 
-    with col_2:
-        image = Image.open('img/img.png')
 
-        st.image(image, caption="Image from previous iteration", use_column_width=True)
 
-    if st.button("Generate Sketch"):
-        dalle_prompt = f"""
-                Update the hair style to be {prompt_hair} and with {prompt_facial_hair} visible.
-                With a {prompt_complexion} complexion, and {prompt_demeanor} demeanor.
-                The expression they showed is {prompt_expression}, and they have {prompt_distinguishing_features}.
-            """
-        
-        with col_2:
-            st.text("")
-            st.text("The description is:")
-            st.write(dalle_prompt)
-            # eric call the mask function here, and make sure that you save the mask.png file in the img folder as mask.png
-            masker("img/img.png", "img/mask.png")
-            change_mask_format("mask.png")
-            st.image(update_image("img/img.png", "mask.png", dalle_prompt))
+
 
 if __name__ == "__main__":
     app()

@@ -17,14 +17,15 @@ st.set_page_config(
     layout="wide"
     )
 st.sidebar.header("Final Details")
-st.sidebar.write("Fill out the following form to generate a police sketch of a suspect.")
+st.sidebar.write("Fill out the following form to update the previous sketch.")
 st.title("More Facial Features")
 
 st.sidebar.markdown(
     """
     ## Instructions
-    1. Type in the text box to update all the incorrect details of the face.
-    2. Click the button to generate the face.
+    1. Type in the text box to update all the incorrect details of the sketch.
+    2. Click the button to update the sketch.
+    3. If you feel the image resembles even better now, you can notify the police officer.
     """
 )
     
@@ -64,33 +65,34 @@ def app():
     with col_1:
 
         col_x, col_y = st.columns(2)
+        
         with col_x:
             prompt_eyebrows = st.text_input('Eyebrows', placeholder='thickness, length .etc')
             prompt_ears = st.text_input('Ears', placeholder='wide, small, .etc')
+            image = Image.open('img/img.png')
+        
         with col_y:
             prompt_mouth = st.text_input('Mouth', placeholder='wide, narrow, .etc')
             prompt_accessories = st.text_input('Accessories', placeholder='glasses, earrings, .etc')
         prompt_essay = st.text_area('Additional Details', height=100, max_chars=200, help='Add any additional details here.')
-    with col_2:
-        image = Image.open('img/img.png')
-
-        st.image(image, caption="Image from previous iteration", use_column_width=True)
-
-    if st.button("Generate Sketch"):
-        dalle_prompt = f"""
-                Update the eyebrows to be {prompt_eyebrows} and with {prompt_ears} ears.
-                With a {prompt_mouth} mouth, and {prompt_accessories} visible. Also update
-                some additional details: {prompt_essay}
-            """
         
-        with col_2:
-            st.text("")
-            st.text("The description is:")
-            st.write(dalle_prompt)
-            # eric call the mask function here, and make sure that you save the mask.png file in the img folder as mask.png
-            masker("img/img.png", "img/mask.png")
-            change_mask_format("mask.png")
-            st.image(update_image("img/img.png", "mask.png", dalle_prompt))
+        if st.button("Update Sketch"):
+            dalle_prompt = f"""
+                    Update the eyebrows to be {prompt_eyebrows} and with {prompt_ears} ears.
+                    With a {prompt_mouth} mouth, and {prompt_accessories} visible. Also update
+                    some additional details: {prompt_essay}
+                """
+        
+            with col_2:
+                st.text("")
+                st.text("The description is:")
+                st.write(dalle_prompt)
+                # eric call the mask function here, and make sure that you save the mask.png file in the img folder as mask.png
+                # masker("img/img.png", "img/mask.png")
+                # change_mask_format("mask.png")
+                st.image(update_image("img/img.png", "mask.png", dalle_prompt))
+        
+        st.image(image, caption="Image from previous iteration", width=150)
 
 if __name__ == "__main__":
     app()

@@ -10,7 +10,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Function to save the image locally
-def save_my_image(image_url, file_path='/home/codespace/recent_img.png'):
+def save_my_image(image_url, file_path='img/img.png'):
     data = requests.get(image_url).content
     with open(file_path, 'wb') as f:
         f.write(data)

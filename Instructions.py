@@ -18,7 +18,7 @@ st.sidebar.success("Please proceed once you've read the instructions.")
 
 # Define Streamlit app
 def app():
-    st.title("Automated Police Sketch Artist")
+    st.title("Forensic Facial Innovation")
 
     st.markdown(
         """
